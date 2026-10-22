@@ -1,0 +1,8 @@
+fastapi
+uvicorn[standard]
+sqlalchemy[asyncio]>=2.0
+asyncpg
+redis>=5
+python-telegram-bot>=21
+python-multipart
+httpx
