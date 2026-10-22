@@ -18,7 +18,7 @@ jobs:
       - name: System packages
         run: |
           sudo apt-get update
-          sudo apt-get install -y git zip unzip openjdk-17-jdk autoconf libtool pkg-config zlib1g-dev libncurses-dev cmake libffi-dev libssl-dev build-essential ccache
+          sudo apt-get install -y git zip unzip openjdk-17-jdk autoconf libtool pkg-config zlib1g-dev libncurses-dev cmake libffi-dev libltdl-dev automake libssl-dev build-essential ccache
       - name: Install buildozer
         run: pip install --upgrade buildozer "cython==0.29.37" virtualenv
       - name: Build APK
