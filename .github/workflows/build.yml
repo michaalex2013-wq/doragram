@@ -3,7 +3,7 @@ on: [push, workflow_dispatch]
 jobs:
   build:
     runs-on: ubuntu-24.04
-    timeout-minutes: 90
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -18,11 +18,19 @@ jobs:
       - name: System packages
         run: |
           sudo apt-get update
-          sudo apt-get install -y git zip unzip openjdk-17-jdk autoconf libtool pkg-config zlib1g-dev libncurses-dev cmake libffi-dev libltdl-dev automake libssl-dev build-essential ccache
+          sudo apt-get install -y git zip unzip openjdk-17-jdk autoconf automake libtool libltdl-dev pkg-config zlib1g-dev libncurses-dev cmake libffi-dev libssl-dev build-essential ccache
       - name: Install buildozer
-        run: pip install --upgrade buildozer "cython==0.29.37" virtualenv
+        run: pip install "buildozer==1.5.0" "cython==0.29.37" virtualenv setuptools
       - name: Build APK
-        run: buildozer -v android debug
+        shell: bash
+        run: buildozer -v android debug 2>&1 | tee build.log
+      - name: Show errors
+        if: failure()
+        run: |
+          echo "=== LAST LINES ==="
+          tail -n 40 build.log | cut -c1-200
+          echo "=== ERRORS ==="
+          grep -nE "error:|Error |fatal|Traceback|undefined reference|No such file" build.log | grep -v "checking" | tail -n 25 | cut -c1-220
       - uses: actions/upload-artifact@v4
         with:
           name: doragram-apk
